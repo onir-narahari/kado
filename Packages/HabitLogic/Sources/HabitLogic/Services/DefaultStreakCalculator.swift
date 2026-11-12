@@ -180,11 +180,11 @@ public struct DefaultStreakCalculator: StreakCalculating {
     // MARK: - Day helpers
 
     private func previousDay(_ day: Date) -> Date {
-        calendar.date(byAdding: .day, value: -1, to: day)!
+        day.addingTimeInterval(-86400)
     }
 
     private func nextDay(_ day: Date) -> Date {
-        calendar.date(byAdding: .day, value: 1, to: day)!
+        day.addingTimeInterval(86400)
     }
 
     /// Deliberately **not** delegated to the shared
