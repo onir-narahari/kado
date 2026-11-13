@@ -68,7 +68,7 @@ extension FrequencyEvaluating {
         return completions.contains { completion in
             completion.habitID == habit.id
                 && completion.value > 0
-                && calendar.isDate(completion.date, inSameDayAs: date)
+                && calendar.isDate(completion.date, equalTo: date, toGranularity: .weekOfYear)
         }
     }
 }
