@@ -24,8 +24,7 @@ public struct DefaultStreakCalculator: StreakCalculating {
     }
 
     public func best(for habit: Habit, completions: [Completion], asOf date: Date) -> Int {
-        let endDate = habit.archivedAt ?? date
-        let end = calendar.startOfDay(for: endDate)
+        let end = calendar.startOfDay(for: date)
         let startDay = calendar.startOfDay(
             for: habit.effectiveStart(completions: completions, calendar: calendar)
         )
