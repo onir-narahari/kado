@@ -51,6 +51,7 @@ public struct DefaultStreakCalculator: StreakCalculating {
         var streak = 0
         var day = end
         var isEndDay = true
+        var todayPending = false
 
         while day >= startDay {
             let due = isDueByDay(habit: habit, on: day)
@@ -61,7 +62,10 @@ public struct DefaultStreakCalculator: StreakCalculating {
             }
 
             let completed = isCompletedByDay(habit: habit, on: day, completedDays: completedDays)
-            if completed {
+            if completed && isEndDay && habit.type == .negative {
+                // Today isn't over: "no slip yet" only counts on top of finished days.
+                todayPending = true
+            } else if completed {
                 streak += 1
             } else if isEndDay {
                 // Grace day — don't count, don't break.
@@ -71,7 +75,7 @@ public struct DefaultStreakCalculator: StreakCalculating {
             day = previousDay(day)
             isEndDay = false
         }
-        return streak
+        return todayPending && streak > 0 ? streak + 1 : streak
     }
 
     private func bestByDay(
@@ -94,7 +98,9 @@ public struct DefaultStreakCalculator: StreakCalculating {
 
             let completed = isCompletedByDay(habit: habit, on: day, completedDays: completedDays)
             let isEndDay = calendar.isDate(day, inSameDayAs: end)
-            if completed {
+            if completed && isEndDay && habit.type == .negative && run == 0 {
+                // Today isn't over and there's no finished clean day before it.
+            } else if completed {
                 run += 1
                 best = max(best, run)
             } else if isEndDay {
